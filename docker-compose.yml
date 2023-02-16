@@ -2,28 +2,22 @@ version: '3.8'
 
 services:
   db:
+    container_name: Calculator_database
     image: postgres:14.6
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_HOST=localhost
-    networks:
-      - web
-      - db
+    volumes:
+      - ./volumes/postgresql-data:/var/lib/postgresql/data
 
 
   web:
-    depends_on:
-      - db
+    container_name: Calculator_localapp
     image: grabe85me/docker_calculator:latest
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
-    networks:
+    depends_on:
       - db
-      - web
-
-networks:
-  db:
-  web:
